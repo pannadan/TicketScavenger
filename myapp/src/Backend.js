@@ -15,8 +15,8 @@ app.get('/api/data', (req, res) => {
 app.use(express.json());
 
 app.post('/api/401k', (req, res) => {
-    const { age, retireAge, costOfLiving, currSavings, totInvestments, 
-            bankInterestRate, retirementLength, monthlyContribution, companyMatching } = req.body;
+    const { age, retireAge, costOfLiving, currSavings, totInvestments, bankInterestRate, 
+        retirementLength, monthlyContribution, companyMatching, debt } = req.body;
 
     const yearsWorking = retireAge-age;
     const moneyNeeded = costOfLiving * 12 * retirementLength;
@@ -64,18 +64,34 @@ app.post('/api/401k', (req, res) => {
 
     totalSaved -= incomeTaxesToPay*retirementLength;
 
-    totalSaved += totInvestments;
+    totalSaved += totInvestments - debt;
 
     var goodOrBadString;
+    var isAbove;
+    
 
     if (totalSaved < moneyNeeded) {
-        goodOrBadString = "Unfortunately, you are not on track to meet your retirement goals...yet!";
+        goodOrBadString = "Unfortunately,\nyou are not on track to meet your retirement goals...\nYET!";
+        isAbove = false;
     } else {
-        goodOrBadString = "Congratulations! You are on track to meet your retirement goals!";
+        goodOrBadString = "Congratulations!\nYou are on track to meet your retirement goals!";
+        isAbove = true;
     }
 
+
+    var moneyToGo = moneyNeeded - totalSaved;
+    var yearsToGo = 0;
+    while (moneyToGo > 0) {
+      moneyToGo -= monthlyContribution * 12;
+      yearsToGo++;
+    }
+    //years to go should be how many more years you have to work.
+
+
     const result = {
+        isAbove,
         goodOrBadString,
 
     }
+
 });
