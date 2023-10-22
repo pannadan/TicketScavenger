@@ -73,18 +73,76 @@ app.post('/api/401k', (req, res) => {
     if (totalSaved < moneyNeeded) {
         goodOrBadString = "Unfortunately,\nyou are not on track to meet your retirement goals...\nYET!";
         isAbove = false;
+
+        //Keep pay the same, find extra years you'd need to work
+
+        var moneyToGo = moneyNeeded - totalSaved;
+        var yearsToGo = 0;
+        while (moneyToGo > 0) {
+          moneyToGo -= monthlyContribution * 12;
+          yearsToGo++;
+        }
+
+        //Keep working years the same, increase monthly contribution.
+
+        
+        var newTotalSaved = totalSaved
+        retiredYearlyIncome = newTotalSaved / retirementLength;
+        amtInBracket = 0;
+        incomeTaxesToPay = 0; //this is for the year
+        
+
+        while (newTotalSaved < moneyNeeded) {
+          newTotalSaved += 12;
+          if (retiredYearlyIncome > 578125) {
+            amtInBracket = retiredYearlyIncome - 578125;
+            incomeTaxesToPay += (amtInBracket) * 0.37;
+            retiredYearlyIncome -= amtInBracket;
+          }
+          if (retiredYearlyIncome > 231251) {
+            amtInBracket = retiredYearlyIncome - 231251;
+            incomeTaxesToPay += (amtInBracket) * 0.35;
+            retiredYearlyIncome -= amtInBracket;
+          }
+          if (retiredYearlyIncome > 182101) {
+            amtInBracket = retiredYearlyIncome - 182101;
+            incomeTaxesToPay += (amtInBracket) * 0.32;
+            retiredYearlyIncome -= amtInBracket;
+          }
+          if (retiredYearlyIncome > 95376) {
+            amtInBracket = retiredYearlyIncome - 95376;
+            incomeTaxesToPay += (amtInBracket) * 0.24;
+            retiredYearlyIncome -= amtInBracket;
+          }
+          if (retiredYearlyIncome > 44726) {
+            amtInBracket = retiredYearlyIncome - 44726;
+            incomeTaxesToPay += (amtInBracket) * 0.22;
+            retiredYearlyIncome -= amtInBracket;
+          }
+          if (retiredYearlyIncome > 11001) {
+            amtInBracket = retiredYearlyIncome - 11001;
+            incomeTaxesToPay += (amtInBracket) * 0.12;
+            retiredYearlyIncome -= amtInBracket;
+          }
+      
+          incomeTaxesToPay += (retiredYearlyIncome) * 0.10;
+
+          newTotalSaved = incomeTaxesToPay * retirementLength;
+        }
+
+        var newMonthlyContribution = 
+
+
+
+
+
     } else {
         goodOrBadString = "Congratulations!\nYou are on track to meet your retirement goals!";
         isAbove = true;
     }
 
 
-    var moneyToGo = moneyNeeded - totalSaved;
-    var yearsToGo = 0;
-    while (moneyToGo > 0) {
-      moneyToGo -= monthlyContribution * 12;
-      yearsToGo++;
-    }
+    
     //years to go should be how many more years you have to work.
 
     var yearlyCostLiving = costOfLiving * 12;
