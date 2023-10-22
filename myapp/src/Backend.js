@@ -26,6 +26,52 @@ app.post('/api/401k', (req, res) => {
         totalSaved *= (1 + bankInterestRate/100);
     }
     
-    totalSaved += totInvestments;
     
+  
+  
+
+    var retiredYearlyIncome = totalSaved / retirementLength;
+    var incomeTaxesToPay;
+    var amtInBracket;
+    if (retiredYearlyIncome > 578125) {
+        amtInBracket = retiredYearlyIncome - 578125;
+        incomeTaxesToPay += (amtInBracket) * 0.37;
+        retiredYearlyIncome -= amtInBracket;
+    }
+    if (retiredYearlyIncome > 231251) {
+      amtInBracket = retiredYearlyIncome - 231251;
+      incomeTaxesToPay += (amtInBracket) * 0.35;
+      retiredYearlyIncome -= amtInBracket;
+    }
+    if (retiredYearlyIncome > 182101) {
+      amtInBracket = retiredYearlyIncome - 182101;
+      incomeTaxesToPay += (amtInBracket) * 0.32;
+      retiredYearlyIncome -= amtInBracket;
+    }
+    if (retiredYearlyIncome > 95376) {
+      amtInBracket = retiredYearlyIncome - 95376;
+      incomeTaxesToPay += (amtInBracket) * 0.24;
+      retiredYearlyIncome -= amtInBracket;
+    }
+    if (retiredYearlyIncome > 44726) {
+      amtInBracket = retiredYearlyIncome - 44726;
+      incomeTaxesToPay += (amtInBracket) * 0.22;
+      retiredYearlyIncome -= amtInBracket;
+    }
+    if (retiredYearlyIncome > 11001) {
+      amtInBracket = retiredYearlyIncome - 11001;
+      incomeTaxesToPay += (amtInBracket) * 0.12;
+      retiredYearlyIncome -= amtInBracket;
+    }
+
+    incomeTaxesToPay += (amtInBracket) * 0.10;
+    retiredYearlyIncome -= amtInBracket;
+
+    totalSaved -= incomeTaxesToPay;
+
+
+
+
+
+    totalSaved += totInvestments;
 });
