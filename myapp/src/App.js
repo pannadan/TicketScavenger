@@ -4,6 +4,8 @@ import { Routes, Route } from "react-router-dom";
 import Topbar from "./scenes/global/Topbar";
 import Sidebar from "./scenes/global/Sidebar";
 import Form from "./scenes/form";
+import Result from "./scenes/results";
+
 
 
 import axios from 'axios';
@@ -34,7 +36,8 @@ function App() {
           <main className = "content">
             <Topbar />
             <Routes>
-              <Route path = "/form" element = {<Form/>}></Route>
+              <Route path = "/" element = {<Form/>}></Route>
+              <Route path = "/results" element = {<Result/>}></Route>
             </Routes>
           </main>
         </div>
