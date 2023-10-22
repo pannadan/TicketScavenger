@@ -1,10 +1,10 @@
 # Retirement Calculator
 
 **Written by**
-Tanav Kalra
-Saif Kader
-Pravar Annadanam
-Ishaan Virani
+Tanav Kalra<br>
+Saif Kader<br>
+Pravar Annadanam<br>
+Ishaan Virani<br>
 
 ## What is this?
 Retirement Calculator is a React tool that was developed for the HackTX Hackathon in the ACM for change challenge and Capital One challenge. 
