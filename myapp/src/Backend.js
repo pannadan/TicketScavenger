@@ -66,12 +66,17 @@ app.post('/api/401k', (req, res) => {
 
     totalSaved += totInvestments;
 
-    var goodOrBad;
+    var goodOrBadString;
 
     if (totalSaved < moneyNeeded) {
-        goodOrBad = "Unfortunately, you are not on track to meet your retirement goals...yet!";
+        goodOrBadString = "Unfortunately, you are not on track to meet your retirement goals...yet!";
     } else {
-        goodOrBad = "Congratulations! You are on track to meet your retirement goals!";
+        goodOrBadString = "Congratulations! You are on track to meet your retirement goals!";
+    }
+
+    const result = {
+        goodOrBadString,
+
     }
 
 
