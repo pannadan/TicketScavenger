@@ -89,18 +89,23 @@ app.post('/api/401k', (req, res) => {
         //Keep working years the same, increase monthly contribution.
 
         
-        var newTotalSaved = totalSaved
-        retiredYearlyIncome = newTotalSaved / retirementLength;
-        amtInBracket = 0;
-        incomeTaxesToPay = 0; //this is for the year
-        
+        var newMonthlyContribution = monthlyContribution;
 
-        while (newTotalSaved < moneyNeeded) {
-          newTotalSaved += 12;
+        while (totalSaved < moneyNeeded) {
+          newMonthlyContribution += 12;
+          totalSaved = currSavings;
+          for (var i = 0; i < yearsWorking; i++) {
+              totalSaved += (newMonthlyContribution + companyMatching) * 12;
+              totalSaved *= (1 + bankInterestRate/100);
+          }
+
+          retiredYearlyIncome = totalSaved / retirementLength;
+          incomeTaxesToPay = 0;
+          amtInBracket = 0;
           if (retiredYearlyIncome > 578125) {
-            amtInBracket = retiredYearlyIncome - 578125;
-            incomeTaxesToPay += (amtInBracket) * 0.37;
-            retiredYearlyIncome -= amtInBracket;
+              amtInBracket = retiredYearlyIncome - 578125;
+              incomeTaxesToPay += (amtInBracket) * 0.37;
+              retiredYearlyIncome -= amtInBracket;
           }
           if (retiredYearlyIncome > 231251) {
             amtInBracket = retiredYearlyIncome - 231251;
@@ -127,20 +132,21 @@ app.post('/api/401k', (req, res) => {
             incomeTaxesToPay += (amtInBracket) * 0.12;
             retiredYearlyIncome -= amtInBracket;
           }
-      
+
           incomeTaxesToPay += (retiredYearlyIncome) * 0.10;
 
-          newTotalSaved = incomeTaxesToPay * retirementLength;
+          totalSaved -= incomeTaxesToPay*retirementLength;
+
+          totalSaved += totInvestments - debt;
         }
 
-        var newMonthlyContribution = 
 
 
 
 
         optionsExplanation = "Some options to reach your current retirement goals:";
-        moreYearsString = "If you keep everything the \nsame, you can retire X years\nlater at age Y";
-        moreMoneyString = "If you can increase your monthly\ncontributions to Z and still\nretire at " + retireAge + ".";
+        moreYearsString = "If you keep everything the \nsame, you can retire " + yearsToGo + " years\nlater at age " + (yearsToGo + retireAge);
+        moreMoneyString = "If you can increase your monthly\ncontributions to" + newMonthlyContribution + " and still\nretire at " + retireAge + ".";
 
     } else {
         goodOrBadString = "Congratulations!\nYou are on track to meet your retirement goals!";
