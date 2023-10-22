@@ -73,4 +73,17 @@ app.post('/api/401k', (req, res) => {
     } else {
         goodOrBad = "Congratulations! You are on track to meet your retirement goals!";
     }
+
+
+    var moneyToGo = moneyNeeded - totalSaved;
+    var yearsToGo = 0;
+    while (moneyToGo > 0) {
+      moneyToGo -= monthlyContribution * 12;
+      yearsToGo++;
+    }
+    //years to go should be how many more years you have to work.
+
+
+    
+
 });
