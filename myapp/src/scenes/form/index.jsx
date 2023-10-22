@@ -14,7 +14,8 @@ const initialValues = {
     yearsOfRet:0,
     monthlyCont:0,
     companyMatching:0,
-    // fundType:"",
+    debt:0,
+    fundType:"",
 };
 
     const userSchema = yup.object().shape({
@@ -35,6 +36,8 @@ const initialValues = {
         monthlyCont:yup.string()
         .required("required"),
         companyMatching:yup.string()
+        .required("required"),
+        debt:yup.string()
         .required("required"),
         fundType:yup.string().required("required"),
     });
@@ -166,6 +169,32 @@ const Form = () => {
                                 onChange = {handleChange}
                                 value = {values.companyMatching}
                                 name = "companyMatching"
+                                error = {!!touched.team && !!errors.team}
+                                helperText = {touched.team && errors.team}
+                                sx = {{ gridColumn: "span 2"}}
+                            />
+                             <TextField
+                                fullWidth
+                                variant = "filled"
+                                type = "text"
+                                label = "Number of Retirement Years"
+                                onBlur = {handleBlur}
+                                onChange = {handleChange}
+                                value = {values.yearsOfRet}
+                                name = "yearsOfRet"
+                                error = {!!touched.team && !!errors.team}
+                                helperText = {touched.team && errors.team}
+                                sx = {{ gridColumn: "span 2"}}
+                            />
+                             <TextField
+                                fullWidth
+                                variant = "filled"
+                                type = "text"
+                                label = "Debt"
+                                onBlur = {handleBlur}
+                                onChange = {handleChange}
+                                value = {values.debt}
+                                name = "debt"
                                 error = {!!touched.team && !!errors.team}
                                 helperText = {touched.team && errors.team}
                                 sx = {{ gridColumn: "span 2"}}

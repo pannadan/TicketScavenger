@@ -5,6 +5,9 @@ const app = express();
 const port = 4000;
 
 app.use(cors())
+app.use(express.json());
+
+let data = { };
 
 app.get('/api/data', (req, res) => {
     res.json({ message: 'Hello from the backend!' });
@@ -15,27 +18,36 @@ app.get('/api/data', (req, res) => {
     console.log(`Server is running on port ${port}`);
   });
 
-app.use(express.json());
+app.get('/api/getData', (req, res) => {
+    res.json(data);
+});
 
 app.post('/api/401k', (req, res) => {
-    const { age, retireAge, costOfLiving, currSavings, totInvestments, bankInterestRate, 
-        retirementLength, monthlyContribution, companyMatching, debt } = req.body;
+    const { age, retireAge, livingCost, savings, investments, apy, 
+        yearsOfRet, monthlyCont, companyMatching, debt } = req.body;
 
 
     console.log(req.body);
 
 
     const yearsWorking = retireAge-age;
-    const moneyNeeded = costOfLiving * 12 * retirementLength;
-    var totalSaved = currSavings;
-    for (var i = 0; i < yearsWorking; i++) {
-        totalSaved += (monthlyContribution + companyMatching) * 12;
-        totalSaved *= (1 + bankInterestRate/100);
+    const moneyNeeded = livingCost * 12 * yearsOfRet;
+    var totalSaved = savings;
+    console.log('years working' + yearsWorking);
+    console.log((monthlyCont + companyMatching))
+    for (var i = 0; i < parseInt(yearsWorking); i++) {
+        console.log('totalSaved1:' + totalSaved);
+        console.log(((parseInt(monthlyCont) + parseInt(companyMatching)) * 12));
+        totalSaved = parseInt(totalSaved) + ((parseInt(monthlyCont) + parseInt(companyMatching)) * 12);
+        console.log('totalSaved2:' + totalSaved);
+        totalSaved = parseInt(totalSaved) * (1 + parseFloat(apy)/100);
+        console.log('totalSaved3:' + totalSaved);
     }
-
-    var retiredYearlyIncome = totalSaved / retirementLength;
-    var incomeTaxesToPay;
-    var amtInBracket;
+    console.log('totalSaved:' + totalSaved);
+    console.log(parseFloat(apy)/100);
+    var retiredYearlyIncome = totalSaved / parseInt(yearsOfRet);
+    var incomeTaxesToPay = 0;
+    var amtInBracket = 0;
     if (retiredYearlyIncome > 578125) {
         amtInBracket = retiredYearlyIncome - 578125;
         incomeTaxesToPay += (amtInBracket) * 0.37;
@@ -69,10 +81,13 @@ app.post('/api/401k', (req, res) => {
 
     incomeTaxesToPay += (retiredYearlyIncome) * 0.10;
 
-    totalSaved -= incomeTaxesToPay*retirementLength;
+    totalSaved -= incomeTaxesToPay*parseInt(yearsOfRet);
+    console.log('CHECK THIS' + totalSaved);
+    console.log('years of ret: ' + parseInt(yearsOfRet));
+    console.log(incomeTaxesToPay);
+    totalSaved += investments - debt;
 
-    totalSaved += totInvestments - debt;
-
+    console.log(totalSaved);
     var goodOrBadString;
     var isAbove;
     var optionsExplanation;
@@ -89,24 +104,24 @@ app.post('/api/401k', (req, res) => {
         var moneyToGo = moneyNeeded - totalSaved;
         var yearsToGo = 0;
         while (moneyToGo > 0) {
-          moneyToGo -= monthlyContribution * 12;
+          moneyToGo -= monthlyCont * 12;
           yearsToGo++;
         }
 
         //Keep working years the same, increase monthly contribution.
 
         
-        var newMonthlyContribution = monthlyContribution;
+        var newMonthlyContribution = monthlyCont;
 
         while (totalSaved < moneyNeeded) {
           newMonthlyContribution += 12;
-          totalSaved = currSavings;
+          totalSaved = savings;
           for (var i = 0; i < yearsWorking; i++) {
               totalSaved += (newMonthlyContribution + companyMatching) * 12;
-              totalSaved *= (1 + bankInterestRate/100);
+              totalSaved *= (1 + apy/100);
           }
 
-          retiredYearlyIncome = totalSaved / retirementLength;
+          retiredYearlyIncome = totalSaved / yearsOfRet;
           incomeTaxesToPay = 0;
           amtInBracket = 0;
           if (retiredYearlyIncome > 578125) {
@@ -142,9 +157,9 @@ app.post('/api/401k', (req, res) => {
 
           incomeTaxesToPay += (retiredYearlyIncome) * 0.10;
 
-          totalSaved -= incomeTaxesToPay*retirementLength;
+          totalSaved -= incomeTaxesToPay*yearsOfRet;
 
-          totalSaved += totInvestments - debt;
+          totalSaved += investments - debt;
         }
 
 
@@ -158,14 +173,15 @@ app.post('/api/401k', (req, res) => {
     } else {
         goodOrBadString = "Congratulations!\nYou are on track to meet your retirement goals!";
         isAbove = true;
-        disposableIncomeString = "You will have $" + ((totalSaved - moneyNeeded) / (retirementLength * 12)) + " of disposable income\navailable to you each month."
+        disposableIncomeString = "You will have $" + ((totalSaved - moneyNeeded) / parseFloat(yearsOfRet * 12)).toFixed(2) + " of disposable income\navailable to you each month."
     }
 
-
+    console.log(moneyNeeded);
+    console.log(yearsOfRet);
     
     //years to go should be how many more years you have to work.
 
-    var yearlyCostLiving = costOfLiving * 12;
+    var yearlyCostLiving = livingCost * 12;
     
 
 
@@ -177,7 +193,6 @@ app.post('/api/401k', (req, res) => {
         moreMoneyString,
         disposableIncomeString
     }
-
-    res.json(result);
-
+    data = result;
+    console.log(data);
 });
