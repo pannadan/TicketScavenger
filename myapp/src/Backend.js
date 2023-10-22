@@ -25,8 +25,7 @@ app.post('/api/401k', (req, res) => {
         totalSaved += (monthlyContribution + companyMatching) * 12;
         totalSaved *= (1 + bankInterestRate/100);
     }
-    totalSaved = 
-    totalSaved = currSavings * (1 + bankInterestRate/100) + totInvestments +
-        (monthlyContribution + companyMatching) * 12 * yearsWorking
+    
+    totalSaved += totInvestments;
     
 });
