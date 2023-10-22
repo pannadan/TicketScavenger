@@ -88,6 +88,9 @@ app.post('/api/401k', (req, res) => {
     }
     //years to go should be how many more years you have to work.
 
+    var yearlyCostLiving = costOfLiving * 12;
+    
+
 
     
 
