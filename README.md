@@ -1,6 +1,6 @@
 # Retirement Calculator
 
-**Written by**<br>
+__**Written by**__<br>
 Tanav Kalra<br>
 Saif Kader<br>
 Pravar Annadanam<br>
