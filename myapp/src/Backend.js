@@ -20,15 +20,11 @@ app.post('/api/401k', (req, res) => {
 
     const yearsWorking = retireAge-age;
     const moneyNeeded = costOfLiving * 12 * retirementLength;
-    var totalSaved = currentSavings;
+    var totalSaved = currSavings;
     for (var i = 0; i < yearsWorking; i++) {
         totalSaved += (monthlyContribution + companyMatching) * 12;
         totalSaved *= (1 + bankInterestRate/100);
     }
-    
-    
-  
-  
 
     var retiredYearlyIncome = totalSaved / retirementLength;
     var incomeTaxesToPay;
@@ -64,14 +60,17 @@ app.post('/api/401k', (req, res) => {
       retiredYearlyIncome -= amtInBracket;
     }
 
-    incomeTaxesToPay += (amtInBracket) * 0.10;
-    retiredYearlyIncome -= amtInBracket;
+    incomeTaxesToPay += (retiredYearlyIncome) * 0.10;
 
-    totalSaved -= incomeTaxesToPay;
-
-
-
-
+    totalSaved -= incomeTaxesToPay*retirementLength;
 
     totalSaved += totInvestments;
+
+    var goodOrBad;
+
+    if (totalSaved < moneyNeeded) {
+        goodOrBad = "Unfortunately, you are not on track to meet your retirement goals...yet!";
+    } else {
+        goodOrBad = "Congratulations! You are on track to meet your retirement goals!";
+    }
 });
