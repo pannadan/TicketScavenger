@@ -1,7 +1,10 @@
 
 const express = require('express');
+const cors = require('cors')
 const app = express();
 const port = 4000;
+
+app.use(cors())
 
 app.get('/api/data', (req, res) => {
     res.json({ message: 'Hello from the backend!' });
@@ -18,16 +21,8 @@ app.post('/api/401k', (req, res) => {
     const { age, retireAge, costOfLiving, currSavings, totInvestments, bankInterestRate, 
         retirementLength, monthlyContribution, companyMatching, debt } = req.body;
 
-    req.body.age = (req.body.age.parseInt());
-    req.body.retireAge = (req.body.retireAge.parseInt());
-    req.body.costOfLiving = (req.body.costOfLiving.parseFloat());
-    req.body.currSavings = (req.body.currSavings.parseFloat());
-    req.body.totInvestments = (req.body.totInvestments.parseFloat());
-    req.body.bankInterestRate = (req.body.bankInterestRate.parseFloat());
-    req.body.retirementLength = (req.body.retirementLength.parseInt());
-    req.body.monthlyContribution = (req.body.monthlyContribution.parseFloat());
-    req.body.companyMatching = (req.body.companyMatching.parseFloat());
-    req.body.debt = (req.body.debt.parseFloat());
+
+    console.log(req.body);
 
 
     const yearsWorking = retireAge-age;
