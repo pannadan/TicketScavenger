@@ -1,5 +1,11 @@
-import logo from './logo.svg';
-import './App.css';
+import { ColorModeContext, useMode } from "./theme";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { Routes, Route } from "react-router-dom";
+import Topbar from "./scenes/global/Topbar";
+import Sidebar from "./scenes/global/Sidebar";
+import Form from "./scenes/form";
+
+
 import axios from 'axios';
 import React, { useEffect } from 'react';
 
@@ -17,23 +23,23 @@ function App() {
   }, []); // The empty dependency array ensures this effect runs only once when the component mounts
 
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  const [theme, colorMode] = useMode();
+
+  return ( 
+    <ColorModeContext.Provider value = { colorMode }>
+      <ThemeProvider theme = { theme }>
+        <CssBaseline />
+        <div className="app">
+          <Sidebar />
+          <main class = "content">
+            <Topbar />
+            <Routes>
+              <Route path = "/form" element = {<Form/>}></Route>
+            </Routes>
+          </main>
+        </div>
+      </ThemeProvider>
+    </ColorModeContext.Provider>
   );
 }
 
