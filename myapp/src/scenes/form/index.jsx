@@ -3,58 +3,49 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
-//import { updateScoutForm } from "../../addScoutingFormData"
 
 const initialValues = {
-    age:"",
-    retireAge:"",
-    livingCost:"",
-    savings:"",
-    investments:"",
-    apy:"",
-    yearsOfRet:"",
-    monthlyCont:"",
-    companyMatching:"",
-    fundType:"",
+    age:0,
+    retireAge:0,
+    livingCost:0,
+    savings:0,
+    investments:0,
+    apy:0,
+    yearsOfRet:0,
+    monthlyCont:0,
+    companyMatching:0,
+    // fundType:"",
 };
 
-const userSchema = yup.object().shape({
-    age: yup.number()
-    .required("required")
-    .positive("Must be positive"),
-    retireAge:yup.number()
-    .required("required")
-    .positive("Must be positive"),
-    livingCost:yup.number()
-    .required("required")
-    .positive("Must be positive"),
-    savings:yup.number()
-    .required("required")
-    .positive("Must be positive"),
-    investments:yup.number()
-    .required("required"),
-    apy:yup.number()
-    .required("required"),
-    yearsOfRet:yup.number()
-    .required("required")
-    .positive("Must be positive"),
-    monthlyCont:yup.number()
-    .required("required")
-    .positive("Must be positive"),
-    companyMatching:yup.number()
-    .required("required")
-    .positive("Must be positive"),
-    fundType:yup.string().required("required"),
-});
+    const userSchema = yup.object().shape({
+        age: yup.string()
+        .required("required"),
+        retireAge:yup.string()
+        .required("required"),
+        livingCost:yup.string()
+        .required("required"),
+        savings:yup.string()
+        .required("required"),
+        investments:yup.string()
+        .required("required"),
+        apy:yup.string()
+        .required("required"),
+        yearsOfRet:yup.string()
+        .required("required"),
+        monthlyCont:yup.string()
+        .required("required"),
+        companyMatching:yup.string()
+        .required("required"),
+        fundType:yup.string().required("required"),
+    });
 
 
 const Form = () => {
     const isNonMobile = useMediaQuery("(min-width:600px)")
 
-    const handleFormSubmit = (values) => {
-        //values.preventDefault();
-        values.id = values.date + "_Sample Report";
-        fetch("./db.json",{
+    const handleFormSubmit = async (values) => {
+        console.log(JSON.stringify(values))
+        const response = await fetch("http://localhost:4000/api/401k",{
             method: "POST",
             headers:{"content-type":"application/json"},
             body: JSON.stringify(values)
@@ -63,9 +54,7 @@ const Form = () => {
         }).catch((err)=>{
            console.log(err.message) 
         })
-        //updateScoutForm(values);
     }
-
     return(
         <Box m = "20px">
             <Header title = "FORM" subtitle = "Submit retirement calculator information"/>
@@ -80,7 +69,7 @@ const Form = () => {
                             <TextField
                                 fullWidth
                                 variant = "filled"
-                                type = "number"
+                                type = "text"
                                 label = "Age"
                                 onBlur = {handleBlur}
                                 onChange = {handleChange}
@@ -97,7 +86,7 @@ const Form = () => {
                                 label = "Retirement Age"
                                 onBlur = {handleBlur}
                                 onChange = {handleChange}
-                                value = {values.scout}
+                                value = {values.retireAge}
                                 name = "retireAge"
                                 error = {!!touched.scout && !!errors.scout}
                                 helperText = {touched.scout && errors.scout}
@@ -110,7 +99,7 @@ const Form = () => {
                                 label = "Living Cost"
                                 onBlur = {handleBlur}
                                 onChange = {handleChange}
-                                value = {values.dxId}
+                                value = {values.livingCost}
                                 name = "livingCost"
                                 error = {!!touched.dxId && !!errors.dxId}
                                 helperText = {touched.dxId && errors.dxId}
@@ -123,7 +112,7 @@ const Form = () => {
                                 label = "Savings"
                                 onBlur = {handleBlur}
                                 onChange = {handleChange}
-                                value = {values.player}
+                                value = {values.savings}
                                 name = "savings"
                                 error = {!!touched.player && !!errors.player}
                                 helperText = {touched.player && errors.player}
@@ -136,7 +125,7 @@ const Form = () => {
                                 label = "Investments"
                                 onBlur = {handleBlur}
                                 onChange = {handleChange}
-                                value = {values.event}
+                                value = {values.investments}
                                 name = "investments"
                                 error = {!!touched.event && !!errors.event}
                                 helperText = {touched.event && errors.event}
@@ -149,7 +138,7 @@ const Form = () => {
                                 label = "Annual Percentage Yield"
                                 onBlur = {handleBlur}
                                 onChange = {handleChange}
-                                value = {values.team}
+                                value = {values.apy}
                                 name = "apy"
                                 error = {!!touched.team && !!errors.team}
                                 helperText = {touched.team && errors.team}
@@ -162,7 +151,7 @@ const Form = () => {
                                 label = "Monthly Contribution"
                                 onBlur = {handleBlur}
                                 onChange = {handleChange}
-                                value = {values.team}
+                                value = {values.monthlyCont}
                                 name = "monthlyCont"
                                 error = {!!touched.team && !!errors.team}
                                 helperText = {touched.team && errors.team}
@@ -175,7 +164,7 @@ const Form = () => {
                                 label = "Company Match"
                                 onBlur = {handleBlur}
                                 onChange = {handleChange}
-                                value = {values.team}
+                                value = {values.companyMatching}
                                 name = "companyMatching"
                                 error = {!!touched.team && !!errors.team}
                                 helperText = {touched.team && errors.team}
@@ -200,27 +189,6 @@ const Form = () => {
                                     <MenuItem value="four">401K</MenuItem>
                                 </Select>
                             </FormControl>
-                             {/* <TextField
-                                multiline
-                                fullWidth
-                                variant="filled"
-                                label="Account Type"
-                                onBlur={handleBlur}
-                                onChange={handleChange}
-                                name="fundType"
-                                error={!!touched.team && !!errors.team}
-                                helperText={touched.team && errors.team}
-                                sx={{ gridColumn: "span 2" }}
-                                >
-                                <Select
-                                    value={values.fundType}
-                                    onChange={handleChange}
-                                >
-                                    <MenuItem value="option1">Option 1</MenuItem>
-                                    <MenuItem value="option2">Option 2</MenuItem>
-                                    <MenuItem value="option3">Option 3</MenuItem>
-                                </Select>
-                                </TextField> */}
                         </Box>
                         <Box display = "flex" justifyContent = "end" mt = "20px">
                             <Button type = "submit" color = "secondary" variant = "contained">

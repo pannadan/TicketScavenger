@@ -31,7 +31,7 @@ function App() {
         <CssBaseline />
         <div className="app">
           <Sidebar />
-          <main class = "content">
+          <main className = "content">
             <Topbar />
             <Routes>
               <Route path = "/form" element = {<Form/>}></Route>
