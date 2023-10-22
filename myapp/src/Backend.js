@@ -68,14 +68,22 @@ app.post('/api/401k', (req, res) => {
 
     var goodOrBadString;
     var isAbove;
-    
+    var optionsExplanation;
+    var moreYearsString;
+    var moreMoneyString;
+    var disposableIncomeString;
 
     if (totalSaved < moneyNeeded) {
         goodOrBadString = "Unfortunately,\nyou are not on track to meet your retirement goals...\nYET!";
         isAbove = false;
+        optionsExplanation = "Some options to reach your current retirement goals:";
+        moreYearsString = "If you keep everything the \nsame, you can retire X years\nlater at age Y";
+        moreMoneyString = "If you can increase your monthly\ncontributions to Z and still\nretire at " + retireAge + ".";
+
     } else {
         goodOrBadString = "Congratulations!\nYou are on track to meet your retirement goals!";
         isAbove = true;
+        disposableIncomeString = "You will have $" + ((totalSaved - moneyNeeded) / (retirementLength * 12)) + " of disposable income\navailable to you each month."
     }
 
 
@@ -91,7 +99,12 @@ app.post('/api/401k', (req, res) => {
     const result = {
         isAbove,
         goodOrBadString,
-
+        optionsExplanation,
+        moreYearsString,
+        moreMoneyString,
+        disposableIncomeString
     }
+
+    res.json(result);
 
 });
